@@ -52,6 +52,13 @@
 (defn rel->tsv [dest rel]
   (rel->xsv dest rel :sep \tab))
 
+(defn rel->excel
+  "Copy relation to clipboard as TSV, for pasting into a spreadsheet."
+  ([rel]
+   (rel->excel nil rel))
+  ([ks rel]
+   (with-clipboard (rel->xsv *out* rel :sep \tab :cols ks))))
+
 ;;;; SERIALIZATION
 
 (defn write-clojure [source obj]
@@ -105,9 +112,3 @@
   "Evaluates body in a context in which *out* is bound to the clipboard."
   [& body]
   `(->clipboard (with-out-str ~@body)))
-
-;;;; USAGE EXAMPLES
-
-(comment
-  ;; Copy relation to clipboard as TSV, for pasting into a spreadsheet.
-  (with-clipboard (rel->tsv *out* rel)))
